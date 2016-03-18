@@ -16,9 +16,9 @@
 
 package com.gist.twitter;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InterruptedIOException;
-import java.io.IOException;
 import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -28,6 +28,7 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import org.apache.commons.httpclient.DefaultHttpMethodRetryHandler;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpException;
@@ -40,6 +41,8 @@ import org.apache.commons.httpclient.auth.AuthScope;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.params.HttpMethodParams;
 
+import example.Example;
+
 /**
  * Connects to the Twitter streaming API using one or more sets of
  * credentials and hands the streams off for processing.  Backs off
@@ -51,6 +54,8 @@ import org.apache.commons.httpclient.params.HttpMethodParams;
  * @author <a href="mailto:tom@gist.com">Tom May</a>
  */
 public class TwitterClient {
+	
+	Example dummyReference = new Example();
     private static Logger logger =
         Logger.getLogger(TwitterClient.class.getName());
 

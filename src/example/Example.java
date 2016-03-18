@@ -29,7 +29,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;;
 
-class Example {
+public class Example {
     public static void main(String[] args) {
         if (args.length == 0) {
             System.err.println(
