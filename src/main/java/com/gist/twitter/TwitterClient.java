@@ -41,6 +41,9 @@ import org.apache.commons.httpclient.auth.AuthScope;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.params.HttpMethodParams;
 
+import com.gist.twitter.FilterParameterFetcher;
+import com.gist.twitter.TwitterStreamProcessor;
+
 import example.Example;
 
 /**
