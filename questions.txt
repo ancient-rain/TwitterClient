@@ -1,0 +1,32 @@
+1) After fixing the above issue, identify the measures whose values are outside the optimal range. Also identify the classes and methods that are responsible for these errors.
+	- Number of Parameters
+		- TwitterClient: TwitterClient, TwitterProcessor, and BackOff constructors
+		- DelimitedTwitterStreamProcessor: readLine, processTwitterStream, and processTwitterUpdate
+	- McCabe Cyclomatic Complexity
+		- TwitterProcessor: run
+	- Lack of Cohesion of Methods
+		- TwitterClient: TwitterClient and TwitterProcessor constructors
+
+2) - Number of Parameters
+	- TwitterClient: 
+		- TwitterClient, TwitterProcessor, and BackOff constructors
+			- pass in only the two important parameters and initialize the other parameters that set the other fields to an empty value. Then have setters set those values that were originally passed in as parameters.
+		- DelimitedTwitterStreamProcessor: readLine, processTwitterStream, and processTwitterUpdate
+			- create separate methods to take in two other parameters and call those separate methods within the original methods
+	- McCabe Cyclomatic Complexity
+		- TwitterProcessor: run
+			- extract out a the check statements into seperate methods
+	- Lack of Cohesion of Methods
+		- TwitterClient: TwitterClient and TwitterProcessor constructors
+			- separate some of the methods into sepearate classes to create a higher cohesion in each class
+
+3) There are threelinearly independent paths connected to BackOff.backOff() and they are connected to TwitterClient, TwitterProcessor, and the com.gist.twitter package. TwitterProcessor has two BackOff fields in which backOff() is called in its run() method and TwitterClient takes in a TwitterProcessor as a field. These two classes are linked to the com.gist.twitter package.
+
+4) The BVA we have to test for the method backOff() is checking to see if backOffMillis is 0, -1, and 1 and then if noInitialBackOff is set or not.
+
+	- backOffMillis = 0 noInitialBackOff = true will set backOffMillis to 0
+	- backOffMillis = 0 noInitialBackOff = false will set backOffMillis to 0
+	- backOffMillis = 1 noInitialBackOff = true will set backOffMillis to 0
+	- backOffMillis = 1 noInitialBackOff = false will set backOffMill to 2 or the capMillis if 2 is greater than capMillis
+	- backOffMillis = -1 noInitialBackOff = true will set backOffMillis to 0
+	- backOffMillis = -1 noInitialBackOff = false will set backOffMillis to -2 or the capMillis if 2 is grater than capMillis
