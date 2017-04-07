@@ -279,53 +279,7 @@ public class TwitterClient {
         public void run() {
             logger.info("Begin " + Thread.currentThread().getName());
             try {
-                while (true) {
-                    if (Thread.interrupted()) {
-                        return;
-                    }
-                    try {
-                        connectAndProcess();
-                    }
-                    catch (SocketTimeoutException ex) {
-                        // Handle like an IOException even though it's
-                        // an InterruptedIOException.
-                        logger.log(Level.WARNING,
-                                   credentials.getUserName()
-                                   + ": Error fetching from " + baseUrl,
-                                   ex);
-                        tcpBackOff.backOff();
-                    }
-                    catch (InterruptedException ex) {
-                        // Don't let this be handled as a generic Exception.
-                        return;
-                    }
-                    catch (InterruptedIOException ex) {
-                        return;
-                    }
-                    catch (HttpException ex) {
-                        logger.log(Level.WARNING,
-                                   credentials.getUserName() 
-                                   + ": Error fetching from " + baseUrl,
-                                   ex);
-                        httpBackOff.backOff();
-                    }
-                    catch (IOException ex) {
-                        logger.log(Level.WARNING,
-                                   credentials.getUserName()
-                                   + ": Error fetching from " + baseUrl,
-                                   ex);
-                        tcpBackOff.backOff();
-                    }
-                    catch (Exception ex) {
-                        // This could be a NumberFormatException or
-                        // something.  Open a new connection to
-                        // resync.
-                        logger.log(Level.WARNING,
-                                   credentials.getUserName() 
-                                   + ": Error fetching from " + baseUrl,
-                                   ex);
-                    }
-                }
+            	connect();
             }
             catch (InterruptedException ex) {
                 return;
@@ -333,6 +287,72 @@ public class TwitterClient {
             finally {
                 logger.info("End " + Thread.currentThread().getName());
             }
+        }
+        
+        private void connect() throws InterruptedException {
+        	while (true) {
+                if (Thread.interrupted()) {
+                    throw new InterruptedException();
+                }
+                try {
+                    connectAndProcess();
+                }
+                catch (SocketTimeoutException ex) {
+                    handleSocketTimeoutException(ex);
+                }
+                catch (InterruptedException ex) {
+                    // Don't let this be handled as a generic Exception.
+                    return;
+                }
+                catch (InterruptedIOException ex) {
+                    return;
+                }
+                catch (HttpException ex) {
+                	handleHttpException(ex);
+                }
+                catch (IOException ex) {
+                    handleIOException(ex);
+                }
+                catch (Exception ex) {
+                    handleUnknownException(ex);
+                }
+            }
+        }
+        
+        public void handleSocketTimeoutException(SocketTimeoutException ex) throws InterruptedException {
+        	// Handle like an IOException even though it's
+            // an InterruptedIOException.
+            logger.log(Level.WARNING,
+                       credentials.getUserName()
+                       + ": Error fetching from " + baseUrl,
+                       ex);
+            tcpBackOff.backOff();
+        }
+        
+        public void handleHttpException(HttpException ex) throws InterruptedException {
+        	logger.log(Level.WARNING,
+                    credentials.getUserName() 
+                    + ": Error fetching from " + baseUrl,
+                    ex);
+        	httpBackOff.backOff();
+        }
+        
+        public void handleIOException(IOException ex) throws InterruptedException {
+        	logger.log(Level.WARNING,
+                    credentials.getUserName()
+                    + ": Error fetching from " + baseUrl,
+                    ex);
+        	tcpBackOff.backOff();
+        }
+        
+        public void handleUnknownException(Exception ex) {
+        	// This could be a NumberFormatException or
+            // something.  Open a new connection to
+            // resync.
+            logger.log(Level.WARNING,
+                       credentials.getUserName() 
+                       + ": Error fetching from " + baseUrl,
+                       ex);
         }
 
         /**
