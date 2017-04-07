@@ -44,8 +44,6 @@ import org.apache.commons.httpclient.params.HttpMethodParams;
 import com.gist.twitter.FilterParameterFetcher;
 import com.gist.twitter.TwitterStreamProcessor;
 
-import example.Example;
-
 /**
  * Connects to the Twitter streaming API using one or more sets of
  * credentials and hands the streams off for processing.  Backs off
@@ -58,7 +56,6 @@ import example.Example;
  */
 public class TwitterClient {
 	
-	Example dummyReference = new Example();
     private static Logger logger =
         Logger.getLogger(TwitterClient.class.getName());
 
